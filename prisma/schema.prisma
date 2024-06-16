@@ -22,10 +22,26 @@ model Author {
   id      Int    @id @default(autoincrement())
   name    String
   country String
+  Book    Book[]
 }
 
 model Publisher {
   id      Int    @id @default(autoincrement())
   name    String
   country String
+  Book    Book[]
+}
+
+model Book {
+  id          String    @id @default(uuid())
+  title       String
+  authorID    Int
+  author      Author    @relation(fields: [authorID], references: [id])
+  image       String
+  publisherID Int
+  publisher   Publisher @relation(fields: [publisherID], references: [id])
+  published   String
+  isbn13      String    @unique
+  isbn10      String    @unique
+  status      String    @default("active")
 }
