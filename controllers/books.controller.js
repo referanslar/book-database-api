@@ -21,6 +21,17 @@ class BooksController {
     }
   }
 
+  async getBooks(req, res, next) {
+    try {
+      const { currentPage, perPage } = req.query;
+      const books = await booksService.getBooks(currentPage, perPage);
+
+      res.status(200).json(books);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getBookByISBN(req, res, next) {
     try {
       const { isbn } = req.params;
