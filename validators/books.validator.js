@@ -1,4 +1,4 @@
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import { validationCheck } from "../middleware/validation-check.middleware.js";
 
 const fields = {
@@ -25,6 +25,17 @@ const params = {
   isbn: param("isbn").notEmpty().withMessage("ISBN is required."),
 };
 
+const queries = {
+  currentPage: query("currentPage")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Current page must be a positive integer."),
+  perPage: query("perPage")
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage("Per page must be a positive integer."),
+};
+
 const booksValidator = {
   createBook: [
     fields.title,
@@ -38,6 +49,7 @@ const booksValidator = {
     validationCheck,
   ],
   getBookByISBN: [params.isbn, validationCheck],
+  getBooks: [queries.currentPage, queries.perPage, validationCheck],
 };
 
 export default booksValidator;

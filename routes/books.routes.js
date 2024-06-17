@@ -65,6 +65,28 @@ router.post(
 
 /**
  * @swagger
+ * /api/books:
+ *   get:
+ *     summary: Get Books
+ *     description: If no query parameters are provided, the API will use default values.
+ *     tags: [Books]
+ *     parameters:
+ *       - in: query
+ *         name: currentPage
+ *         schema:
+ *           type: int
+ *       - in: query
+ *         name: perPage
+ *         schema:
+ *           type: int
+ *     responses:
+ *       200:
+ *         description: OK
+ */
+router.get("/", booksValidator.getBooks, booksController.getBooks);
+
+/**
+ * @swagger
  * /api/books/{isbn}:
  *   get:
  *     summary: Get Book by ISBN

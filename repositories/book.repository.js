@@ -50,9 +50,27 @@ class BookRepository {
     try {
       return await postgres.prisma.book.findMany({
         where: { isbn10: isbn10 },
-        include: {
-          author: true,
-          publisher: true,
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          published: true,
+          isbn13: true,
+          isbn10: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
+          publisher: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -72,14 +90,106 @@ class BookRepository {
     try {
       return await postgres.prisma.book.findMany({
         where: { isbn13: isbn13 },
-        include: {
-          author: true,
-          publisher: true,
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          published: true,
+          isbn13: true,
+          isbn10: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
+          publisher: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
         },
       });
     } catch (error) {
       logger.error(error);
       throw createError(500, "Could not fetch books by ISBN-13.");
+    }
+  }
+
+  /**
+   * Counts the number of books in the database.
+   * @returns {Promise<number>} The number of books in the database.
+   * @throws {Error} If there is an error while counting the books.
+   */
+  async countBooks() {
+    try {
+      return await postgres.prisma.book.count();
+    } catch (error) {
+      logger.error(error);
+      throw createError(500, "Could not count books.");
+    }
+  }
+
+  /**
+   * Retrieves a paginated list of books from the database.
+   * @param {number} [currentPage = 1] - The current page number.
+   * @param {number} [perPage = 10] - The number of books to display per page.
+   * @returns {Promise<Object>} The paginated list of books.
+   * @throws {Error} If there is an error fetching the books.
+   */
+  async getBooks(currentPage = 1, perPage = 10) {
+    try {
+      currentPage = parseInt(currentPage, 10);
+      perPage = parseInt(perPage, 10);
+
+      if (isNaN(currentPage) || currentPage < 1) {
+        currentPage = 1;
+      }
+      if (isNaN(perPage) || perPage < 1) {
+        perPage = 10;
+      }
+
+      const skip = (currentPage - 1) * perPage;
+      const totalBooks = await this.countBooks();
+      const books = await postgres.prisma.book.findMany({
+        skip: (currentPage - 1) * perPage,
+        take: perPage,
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          published: true,
+          isbn13: true,
+          isbn10: true,
+          author: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
+          publisher: {
+            select: {
+              id: true,
+              name: true,
+              country: true,
+            },
+          },
+        },
+      });
+      return {
+        totalBooks,
+        currentPage,
+        perPage,
+        totalPages: Math.ceil(totalBooks / perPage),
+        books,
+      };
+    } catch (error) {
+      logger.error(error);
+      throw createError(500, "Could not fetch books.");
     }
   }
 }

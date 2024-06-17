@@ -104,6 +104,16 @@ class BooksService {
 
     throw createError(400, "Invalid ISBN.");
   }
+
+  /**
+   * Retrieves a list of books from the book repository.
+   * @param {number} currentPage - The current page number.
+   * @param {number} perPage - The number of books to retrieve per page.
+   * @returns {Promise<Array>} A promise that resolves to an array of books.
+   */
+  async getBooks(currentPage, perPage) {
+    return await bookRepository.getBooks(currentPage, perPage);
+  }
 }
 
 export default new BooksService();
