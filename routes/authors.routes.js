@@ -4,6 +4,7 @@ import authorsController from "../controllers/authors.controller.js";
 import authorsValidator from "../validators/authors.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import adminCheck from "../middleware/admin-check.middleware.js";
 import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
@@ -39,6 +40,7 @@ router.post(
   "/",
   authLimiter,
   authCheck,
+  adminCheck,
   authorsValidator.createAuthor,
   authorsController.createAuthor
 );
@@ -48,10 +50,8 @@ router.post(
  * /api/authors:
  *   get:
  *     summary: Get Authors
- *     description: Only admin can get all authors.
+ *     description: If no query parameters are provided, the API will use default values.
  *     tags: [Authors]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: currentPage
@@ -65,17 +65,15 @@ router.post(
  *       200:
  *         description: OK
  */
-router.get("/", authLimiter, authCheck, authorsValidator.getAuthors, authorsController.getAuthors);
+router.get("/", authorsValidator.getAuthors, authorsController.getAuthors);
 
 /**
  * @swagger
  * /api/authors/{authorID}:
  *   get:
  *     summary: Get Author by ID
- *     description: Only admin can get author by ID.
+ *     description: Get author details by ID.
  *     tags: [Authors]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: authorID
@@ -86,13 +84,7 @@ router.get("/", authLimiter, authCheck, authorsValidator.getAuthors, authorsCont
  *       200:
  *         description: OK
  */
-router.get(
-  "/:authorID",
-  authLimiter,
-  authCheck,
-  authorsValidator.getAuthorByID,
-  authorsController.getAuthorByID
-);
+router.get("/:authorID", authorsValidator.getAuthorByID, authorsController.getAuthorByID);
 
 /**
  * @swagger
@@ -131,6 +123,7 @@ router.put(
   "/:authorID",
   authLimiter,
   authCheck,
+  adminCheck,
   authorsValidator.updateAuthor,
   authorsController.updateAuthor
 );
@@ -158,6 +151,7 @@ router.delete(
   "/:authorID",
   authLimiter,
   authCheck,
+  adminCheck,
   authorsValidator.deleteAuthor,
   authorsController.deleteAuthor
 );

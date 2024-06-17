@@ -4,6 +4,7 @@ import publishersController from "../controllers/publishers.controller.js";
 import publishersValidator from "../validators/publishers.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import adminCheck from "../middleware/admin-check.middleware.js";
 import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
@@ -39,6 +40,7 @@ router.post(
   "/",
   authLimiter,
   authCheck,
+  adminCheck,
   publishersValidator.createPublisher,
   publishersController.createPublisher
 );
@@ -48,6 +50,7 @@ router.post(
  * /api/publishers/{publisherID}:
  *   get:
  *     summary: Get Publisher by ID
+ *     description: Get publisher details by publisher ID.
  *     tags: [Publishers]
  *     parameters:
  *       - in: path

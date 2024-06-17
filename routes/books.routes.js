@@ -4,6 +4,7 @@ import booksController from "../controllers/books.controller.js";
 import booksValidator from "../validators/books.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import adminCheck from "../middleware/admin-check.middleware.js";
 import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
@@ -13,7 +14,10 @@ const router = express.Router();
  * /api/books:
  *   post:
  *     summary: Create Book
+ *     description: Only admins can create books.
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -50,13 +54,21 @@ const router = express.Router();
  *       201:
  *         description: Created
  */
-router.post("/", authLimiter, authCheck, booksValidator.createBook, booksController.createBook);
+router.post(
+  "/",
+  authLimiter,
+  authCheck,
+  adminCheck,
+  booksValidator.createBook,
+  booksController.createBook
+);
 
 /**
  * @swagger
  * /api/books/{isbn}:
  *   get:
  *     summary: Get Book by ISBN
+ *     description: Get book details by ISBN10 or ISBN13.
  *     tags: [Books]
  *     parameters:
  *       - in: path
@@ -68,6 +80,6 @@ router.post("/", authLimiter, authCheck, booksValidator.createBook, booksControl
  *       200:
  *         description: OK
  */
-router.get("/:isbn", authLimiter, booksValidator.getBookByISBN, booksController.getBookByISBN);
+router.get("/:isbn", booksValidator.getBookByISBN, booksController.getBookByISBN);
 
 export default router;
