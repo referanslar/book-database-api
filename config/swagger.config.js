@@ -1,9 +1,16 @@
 import swaggerUI from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 
+import packageJSON from "../package.json" assert { type: "json" };
+
 const swaggerSpec = swaggerJSDoc({
   definition: {
     openapi: "3.0.0",
+    info: {
+      title: packageJSON.name,
+      description: packageJSON.description,
+      version: packageJSON.version,
+    },
     components: {
       securitySchemes: {
         bearerAuth: {
