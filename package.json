@@ -1,5 +1,6 @@
 {
   "name": "book-database-api",
+  "description": "This is an API for accessing and managing a book database.",
   "version": "1.8.1",
   "type": "module",
   "private": true,
