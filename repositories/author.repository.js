@@ -29,6 +29,16 @@ class AuthorRepository {
    * @returns {Promise<Object>} An object containing the paginated list of authors.
    */
   async getAuthors(currentPage = 1, perPage = 10) {
+    currentPage = parseInt(currentPage, 10);
+    perPage = parseInt(perPage, 10);
+
+    if (isNaN(currentPage) || currentPage < 1) {
+      currentPage = 1;
+    }
+    if (isNaN(perPage) || perPage < 1) {
+      perPage = 10;
+    }
+
     const skip = (currentPage - 1) * perPage;
     const totalAuthors = await this.countAuthors();
     const authors = await postgres.prisma.author.findMany({
