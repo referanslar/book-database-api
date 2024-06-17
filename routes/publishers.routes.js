@@ -4,6 +4,7 @@ import publishersController from "../controllers/publishers.controller.js";
 import publishersValidator from "../validators/publishers.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
 
@@ -36,6 +37,7 @@ const router = express.Router();
  */
 router.post(
   "/",
+  authLimiter,
   authCheck,
   publishersValidator.createPublisher,
   publishersController.createPublisher

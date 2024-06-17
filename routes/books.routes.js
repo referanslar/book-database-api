@@ -4,6 +4,7 @@ import booksController from "../controllers/books.controller.js";
 import booksValidator from "../validators/books.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
 
@@ -49,7 +50,7 @@ const router = express.Router();
  *       201:
  *         description: Created
  */
-router.post("/", authCheck, booksValidator.createBook, booksController.createBook);
+router.post("/", authLimiter, authCheck, booksValidator.createBook, booksController.createBook);
 
 /**
  * @swagger
@@ -67,6 +68,6 @@ router.post("/", authCheck, booksValidator.createBook, booksController.createBoo
  *       200:
  *         description: OK
  */
-router.get("/:isbn", booksValidator.getBookByISBN, booksController.getBookByISBN);
+router.get("/:isbn", authLimiter, booksValidator.getBookByISBN, booksController.getBookByISBN);
 
 export default router;

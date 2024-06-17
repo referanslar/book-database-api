@@ -4,6 +4,7 @@ import authorsController from "../controllers/authors.controller.js";
 import authorsValidator from "../validators/authors.validator.js";
 
 import authCheck from "../middleware/auth-check.middleware.js";
+import { authLimiter } from "../middleware/rate-limit.middleware.js";
 
 const router = express.Router();
 
@@ -34,7 +35,13 @@ const router = express.Router();
  *       201:
  *         description: Created
  */
-router.post("/", authCheck, authorsValidator.createAuthor, authorsController.createAuthor);
+router.post(
+  "/",
+  authLimiter,
+  authCheck,
+  authorsValidator.createAuthor,
+  authorsController.createAuthor
+);
 
 /**
  * @swagger
@@ -58,7 +65,7 @@ router.post("/", authCheck, authorsValidator.createAuthor, authorsController.cre
  *       200:
  *         description: OK
  */
-router.get("/", authCheck, authorsValidator.getAuthors, authorsController.getAuthors);
+router.get("/", authLimiter, authCheck, authorsValidator.getAuthors, authorsController.getAuthors);
 
 /**
  * @swagger
@@ -81,6 +88,7 @@ router.get("/", authCheck, authorsValidator.getAuthors, authorsController.getAut
  */
 router.get(
   "/:authorID",
+  authLimiter,
   authCheck,
   authorsValidator.getAuthorByID,
   authorsController.getAuthorByID
@@ -119,7 +127,13 @@ router.get(
  *       200:
  *         description: OK
  */
-router.put("/:authorID", authCheck, authorsValidator.updateAuthor, authorsController.updateAuthor);
+router.put(
+  "/:authorID",
+  authLimiter,
+  authCheck,
+  authorsValidator.updateAuthor,
+  authorsController.updateAuthor
+);
 
 /**
  * @swagger
@@ -142,6 +156,7 @@ router.put("/:authorID", authCheck, authorsValidator.updateAuthor, authorsContro
  */
 router.delete(
   "/:authorID",
+  authLimiter,
   authCheck,
   authorsValidator.deleteAuthor,
   authorsController.deleteAuthor
