@@ -87,7 +87,7 @@ router.get("/", booksValidator.getBooks, booksController.getBooks);
 
 /**
  * @swagger
- * /api/books/{isbn}:
+ * /api/books/search/{isbn}:
  *   get:
  *     summary: Get Book by ISBN
  *     description: Get book details by ISBN10 or ISBN13.
@@ -102,6 +102,6 @@ router.get("/", booksValidator.getBooks, booksController.getBooks);
  *       200:
  *         description: OK
  */
-router.get("/:isbn", booksValidator.getBookByISBN, booksController.getBookByISBN);
+router.get("/search/:isbn", booksValidator.getBookByISBN, booksController.getBookByISBN);
 
 export default router;
