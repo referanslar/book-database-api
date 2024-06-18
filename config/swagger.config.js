@@ -1,5 +1,6 @@
 import swaggerUI from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
+import { SwaggerTheme, SwaggerThemeNameEnum } from "swagger-themes";
 
 import packageJSON from "../package.json" assert { type: "json" };
 
@@ -24,5 +25,11 @@ const swaggerSpec = swaggerJSDoc({
   apis: ["./routes/*.js"],
 });
 
+const theme = new SwaggerTheme();
+const options = {
+  explorer: false,
+  customCss: theme.getBuffer(SwaggerThemeNameEnum.FLATTOP),
+};
+
 export const serve = swaggerUI.serve;
-export const setup = swaggerUI.setup(swaggerSpec);
+export const setup = swaggerUI.setup(swaggerSpec, options);
