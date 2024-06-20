@@ -56,10 +56,10 @@ class BooksService {
   }
 
   /**
-   * Retrieves a book from the database by its ISBN-10 number.
+   * Retrieves a book by its ISBN-10 number.
    * @param {string} isbn10 - The ISBN-10 number of the book.
-   * @returns {Promise<Object>} - A promise that resolves to the book object if found.
-   * @throws {Error} - Throws an error if the book is not found.
+   * @returns {Object} - The book object containing its details.
+   * @throws {Error} - If the book is not found.
    */
   async getBookByISBN10(isbn10) {
     const searchISBN10 = await bookRepository.getBooksByISBN10(isbn10);
@@ -68,14 +68,23 @@ class BooksService {
       throw createError(404, "Book not found.");
     }
 
-    return searchISBN10[0];
+    return {
+      id: searchISBN10[0].id,
+      title: searchISBN10[0].title,
+      author: searchISBN10[0].author.name,
+      image: searchISBN10[0].image,
+      publisher: searchISBN10[0].publisher.name,
+      published: searchISBN10[0].published,
+      isbn13: searchISBN10[0].isbn13,
+      isbn10: searchISBN10[0].isbn10,
+    };
   }
 
   /**
-   * Retrieves a book from the database by its ISBN-13 number.
+   * Retrieves a book by its ISBN-13 number.
    * @param {string} isbn13 - The ISBN-13 number of the book.
-   * @returns {Promise<Object>} - A promise that resolves to the book object.
-   * @throws {Error} - If the book is not found, a 404 error is thrown.
+   * @returns {Object} - The book object containing its details.
+   * @throws {Error} - If the book is not found.
    */
   async getBookByISBN13(isbn13) {
     const searchISBN13 = await bookRepository.getBooksByISBN13(isbn13);
@@ -84,7 +93,16 @@ class BooksService {
       throw createError(404, "Book not found.");
     }
 
-    return searchISBN13[0];
+    return {
+      id: searchISBN13[0].id,
+      title: searchISBN13[0].title,
+      author: searchISBN13[0].author.name,
+      image: searchISBN13[0].image,
+      publisher: searchISBN13[0].publisher.name,
+      published: searchISBN13[0].published,
+      isbn13: searchISBN13[0].isbn13,
+      isbn10: searchISBN13[0].isbn10,
+    };
   }
 
   /**
