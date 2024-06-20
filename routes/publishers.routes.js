@@ -52,6 +52,8 @@ router.post(
  *     summary: Get Publisher by ID
  *     description: Get publisher details by publisher ID.
  *     tags: [Publishers]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: publisherID
@@ -64,6 +66,7 @@ router.post(
  */
 router.get(
   "/:publisherID",
+  authCheck,
   publishersValidator.getPublisherByID,
   publishersController.getPublisherByID
 );

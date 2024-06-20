@@ -52,6 +52,8 @@ router.post(
  *     summary: Get Authors
  *     description: If no query parameters are provided, the API will use default values.
  *     tags: [Authors]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: currentPage
@@ -65,7 +67,7 @@ router.post(
  *       200:
  *         description: OK
  */
-router.get("/", authorsValidator.getAuthors, authorsController.getAuthors);
+router.get("/", authCheck, authorsValidator.getAuthors, authorsController.getAuthors);
 
 /**
  * @swagger
@@ -74,6 +76,8 @@ router.get("/", authorsValidator.getAuthors, authorsController.getAuthors);
  *     summary: Get Author by ID
  *     description: Get author details by ID.
  *     tags: [Authors]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: authorID
@@ -84,7 +88,12 @@ router.get("/", authorsValidator.getAuthors, authorsController.getAuthors);
  *       200:
  *         description: OK
  */
-router.get("/:authorID", authorsValidator.getAuthorByID, authorsController.getAuthorByID);
+router.get(
+  "/:authorID",
+  authCheck,
+  authorsValidator.getAuthorByID,
+  authorsController.getAuthorByID
+);
 
 /**
  * @swagger

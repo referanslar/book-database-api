@@ -70,6 +70,8 @@ router.post(
  *     summary: Get Books
  *     description: If no query parameters are provided, the API will use default values.
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: currentPage
@@ -83,7 +85,7 @@ router.post(
  *       200:
  *         description: OK
  */
-router.get("/", booksValidator.getBooks, booksController.getBooks);
+router.get("/", authCheck, booksValidator.getBooks, booksController.getBooks);
 
 /**
  * @swagger
@@ -92,6 +94,8 @@ router.get("/", booksValidator.getBooks, booksController.getBooks);
  *     summary: Get Book by ISBN
  *     description: Get book details by ISBN10 or ISBN13.
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: isbn
@@ -102,6 +106,6 @@ router.get("/", booksValidator.getBooks, booksController.getBooks);
  *       200:
  *         description: OK
  */
-router.get("/search/:isbn", booksValidator.getBookByISBN, booksController.getBookByISBN);
+router.get("/search/:isbn", authCheck, booksValidator.getBookByISBN, booksController.getBookByISBN);
 
 export default router;
